@@ -31,7 +31,11 @@ frappe.ui.form.on('Salary Slip', {
             filters: { 'employee': employee },
             limit_page_length: 1
         }).then((salary_doc) => {
-            console.log(salary_doc[0].custom_site_percentage);
+            frappe.get_doc('Salary Structure Assignment', salary_doc[0])
+                .then(doc => {
+                    const fieldValue = doc.custom_site_percentage;
+                    console.log(fieldValue);
+                });
         });
     }
 });
