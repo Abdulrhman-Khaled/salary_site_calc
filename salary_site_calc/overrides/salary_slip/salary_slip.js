@@ -1,6 +1,6 @@
 // frappe.ui.form.on('Salary Slip', {
 //     onload: function(frm) {
-        
+
 //  frappe.db.get_list('Salary Structure Assignment', {
 //                 filters: { 'employee': frm.doc.employee },
 //                 limit_page_length: 1
@@ -18,15 +18,20 @@
 //         //         frm.set_value('salary_per_day', daily_salary + (daily_salary * (site_percentage / 100)));
 //         //     });
 //         // } else {
-            
+
 //         // }
 //     }
 // });
 
 frappe.ui.form.on('Salary Slip', {
-    employee: function(frm) {
+    employee: function (frm) {
         const employee = frm.doc.employee;
         console.log(employee);
-
+        frappe.db.get_list('Salary Structure Assignment', {
+            filters: { 'employee': employee },
+            limit_page_length: 1
+        }).then((salary_doc) => {
+            console.log(salary_doc);
+        });
     }
 });
