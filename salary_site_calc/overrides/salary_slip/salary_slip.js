@@ -32,7 +32,7 @@ frappe.ui.form.on('Salary Slip', {
             limit_page_length: 1
         }).then((salary_doc) => {
             frappe.get_doc('Salary Structure Assignment', salary_doc[0])
-                .then(doc => {
+                .then((doc) => {
                     const fieldValue = doc.custom_site_percentage;
                     console.log(fieldValue);
                 });
