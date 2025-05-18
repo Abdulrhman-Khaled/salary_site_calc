@@ -27,16 +27,13 @@ frappe.ui.form.on('Salary Slip', {
 
     employee: function (frm) {
         const employee = frm.doc.employee;
-        // frappe.db.get_list('Salary Structure Assignment', {
-        //     filters: { 'employee': employee },
-        //     limit_page_length: 1
-        // }).then((salary_structure_doc) => {
-        //     console.log(salary_structure_doc[0]['name']);
-        // });
-        frappe.get_doc('Salary Structure Assignment', 'HR-SSA-25-05-00002')
-                .then((doc) => {
-                    //const fieldValue = doc.custom_site_percentage;
-                    console.log(doc);
-                });
+        frappe.db.get_list('Salary Structure Assignment', {
+            filters: { 'employee': employee },
+            limit_page_length: 1
+        }).then((salary_structure_doc) => {
+            console.log(salary_structure_doc[0]['name']);
+             frappe.get_doc('Salary Structure Assignment', 'HR-SSA-25-05-00002');
+        });
+      
     }
 });
