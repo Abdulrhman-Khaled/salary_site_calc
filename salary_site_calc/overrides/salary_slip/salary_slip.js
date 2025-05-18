@@ -24,27 +24,19 @@
 // });
 
 frappe.ui.form.on('Salary Slip', {
+
     employee: function (frm) {
         const employee = frm.doc.employee;
         frappe.db.get_list('Salary Structure Assignment', {
             filters: { 'employee': employee },
             limit_page_length: 1
-        }).then((salary_structure_docs) => {
-            if (salary_structure_docs.length > 0) {
-                const salary_structure_doc = salary_structure_docs[0];
-                console.log(salary_structure_doc['name']);
+        }).then((salary_structure_doc) => {
+            console.log(salary_structure_doc[0]['name']);
+            frappe.get_doc('Salary Structure Assignment', salary_structure_doc[0]['name']).then((salary_doc) => {
+                console.log(salary_doc);
 
-                // Fetch the full document using the name
-                frappe.get_doc('Salary Structure Assignment', salary_structure_doc['name']).then((salary_doc) => {
-                    console.log(salary_doc);
-                }).catch(error => {
-                    console.error('Error fetching salary structure document:', error);
-                });
-            } else {
-                console.warn('No Salary Structure Assignment found for this employee.');
-            }
-        }).catch(error => {
-            console.error('Error fetching salary structure list:', error);
+            })
         });
+
     }
 });
