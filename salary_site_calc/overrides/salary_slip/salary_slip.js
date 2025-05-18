@@ -32,7 +32,9 @@ frappe.ui.form.on('Salary Slip', {
             limit_page_length: 1
         }).then((salary_structure_doc) => {
             console.log(salary_structure_doc[0]['name']);
-             frappe.get_doc('Salary Structure Assignment', 'HR-SSA-25-05-00002');
+             frappe.get_doc('Salary Structure Assignment', 'HR-SSA-25-05-00002').then((salary_doc) => {
+                 console.log(salary_doc);
+             })
         });
       
     }
