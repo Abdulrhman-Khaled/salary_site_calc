@@ -35,8 +35,8 @@ frappe.ui.form.on('Salary Slip', {
         });
         frappe.get_doc('Salary Structure Assignment', 'HR-SSA-25-05-00002')
                 .then((doc) => {
-                    const fieldValue = doc.custom_site_percentage;
-                    console.log(fieldValue);
+                    //const fieldValue = doc.custom_site_percentage;
+                    console.log(doc);
                 });
     }
 });
