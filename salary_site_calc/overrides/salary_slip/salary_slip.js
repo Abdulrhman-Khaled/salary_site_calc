@@ -24,18 +24,19 @@
 // });
 
 frappe.ui.form.on('Salary Slip', {
+
     employee: function (frm) {
         const employee = frm.doc.employee;
-        console.log(employee);
         frappe.db.get_list('Salary Structure Assignment', {
             filters: { 'employee': employee },
             limit_page_length: 1
-        }).then((salary_doc) => {
-            frappe.dp.get_doc('Salary Structure Assignment', salary_doc[0])
-                .then((doc) => {
-                    const fieldValue = doc.custom_site_percentage;
-                    console.log(fieldValue);
-                });
+        }).then((salary_structure_doc) => {
+            console.log(salary_structure_doc[0]);
+            // frappe.dp.get_doc('Salary Structure Assignment', salary_structure_doc[0])
+            //     .then((doc) => {
+            //         const fieldValue = doc.custom_site_percentage;
+            //         console.log(fieldValue);
+            //     });
         });
     }
 });
