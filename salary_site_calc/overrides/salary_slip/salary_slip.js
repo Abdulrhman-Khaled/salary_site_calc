@@ -47,10 +47,9 @@ function fetch_last_salary_structure(employee, salarySlip, attendanceRecords) {
 
 function fetch_salary_slip(salarySlipName, sitePercentage, attendanceRecords) {
     frappe.call({
-        method: "frappe.get_doc",
+        method: "salary_site_calc.overrides.salary_slip.salary_slip.get_salary_slip",
         args: {
-            doctype: "Salary Slip",
-            name: salarySlipName
+            salary_slip_name: salarySlipName
         },
         callback: function (response) {
             if (response.message) {
