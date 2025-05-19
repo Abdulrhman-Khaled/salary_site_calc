@@ -11,7 +11,16 @@ frappe.ui.form.on('Salary Slip', {
             callback: function (response) {
                 if (response.message) {
                     console.log("Attendance Records:", response.message.length);
-                    fetch_last_salary_structure(frm.doc.employee, response.message.length);
+                    const attendanceRecordsLength = response.message.length;
+                    fetch_last_salary_structure(frm.doc.employee, function (sitePercentage) {
+                        if (sitePercentage !== null) {
+                            // Now update the salary slip using the site percentage
+                            frm.doc.base_gross_pay = 1000;
+
+                        } else {
+                            console.error("Failed to get site percentage.");
+                        }
+                    });
                 } else {
                     console.error("No records found.");
                 }
@@ -23,7 +32,7 @@ frappe.ui.form.on('Salary Slip', {
     }
 });
 
-function fetch_last_salary_structure(employee, attendanceRecords) {
+function fetch_last_salary_structure(employee) {
     frappe.call({
         method: "salary_site_calc.overrides.salary_slip.salary_slip.get_last_salary_structure",
         args: {
@@ -32,7 +41,7 @@ function fetch_last_salary_structure(employee, attendanceRecords) {
         callback: function (response) {
             if (response.message) {
                 console.log("Site Percentage:", response.message.custom_site_percentage);
-                update_salary_slip(attendanceRecords, response.message.custom_site_percentage);
+                callback(response.message.custom_site_percentage);
             } else {
                 console.error("No salary structure found.");
             }
@@ -46,7 +55,7 @@ function fetch_last_salary_structure(employee, attendanceRecords) {
 function update_salary_slip(attendanceRecords, sitePercentage) {
     const attendanceLength = attendanceRecords.length;
 
-    const earnings = frappe.model.get_value("Salary Slip","earnings");
+    const earnings = frappe.model.get_value("Salary Slip", "earnings");
 
     if (earnings && earnings.length > 0) {
         const earning = earnings[0];
