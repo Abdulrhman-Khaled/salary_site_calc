@@ -27,6 +27,8 @@ frappe.ui.form.on('Salary Slip', {
                                 frappe.model.set_value(earning.doctype, earning.name, "amount", newAmount);
 
                                 frm.refresh_field("earnings");
+                                frm.refresh_field("base_gross_pay");
+                                frm.refresh_field("gross_pay");
 
                                 console.log("Updated Earnings:", earning);
                             } else {

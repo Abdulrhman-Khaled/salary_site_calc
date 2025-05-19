@@ -2,10 +2,6 @@ import frappe
 from frappe.utils import getdate
 
 @frappe.whitelist()
-def get_salary_slip(salary_slip_name):
-    return frappe.get_doc('Salary Slip', salary_slip_name)
-
-@frappe.whitelist()
 def fetch_attendance(employee, start_date, end_date):
     return get_attendance(employee, start_date, end_date)
 
