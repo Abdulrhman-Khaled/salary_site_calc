@@ -31,13 +31,15 @@ frappe.ui.form.on('Salary Slip', {
                                 frm.doc.total_in_words = frappe.call({
                                     method: "salary_site_calc.overrides.salary_slip.salary_slip.money_in_words",
                                     args: {
-                                        amount: Math.round(newAmount)
+                                        amount: Math.round(newAmount),
+                                        currency: frm.doc.currency
                                     }
                                 },);
                                 frm.doc.base_total_in_words = frappe.call({
                                     method: "salary_site_calc.overrides.salary_slip.salary_slip.money_in_words",
                                     args: {
-                                        amount: Math.round(newAmount)
+                                        amount: Math.round(newAmount),
+                                        currency: frm.doc.currency
                                     }
                                 },);
 

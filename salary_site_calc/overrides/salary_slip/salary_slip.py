@@ -33,5 +33,5 @@ def get_last_salary_structure(employee):
     return None
 
 @frappe.whitelist()
-def money_in_words(amount):
-    return money_in_words(amount)
+def money_in_words(amount, currency):
+    return money_in_words(amount, currency)
