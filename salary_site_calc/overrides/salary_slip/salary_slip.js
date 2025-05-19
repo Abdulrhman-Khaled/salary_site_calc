@@ -28,8 +28,18 @@ frappe.ui.form.on('Salary Slip', {
                                 frm.doc.rounded_total = Math.round(newAmount);
                                 frm.doc.base_rounded_total = Math.round(newAmount);
 
-                                frm.doc.total_in_words = frappe.utils.money_in_words( Math.round(newAmount));
-                                frm.doc.base_total_in_words = frappe.utils.money_in_words( Math.round(newAmount));
+                                frm.doc.total_in_words = frappe.call({
+                                    method: "salary_site_calc.overrides.salary_slip.salary_slip.get_money_in_words",
+                                    args: {
+                                        amount: Math.round(newAmount)
+                                    }
+                                },);
+                                frm.doc.base_total_in_words = frappe.call({
+                                    method: "salary_site_calc.overrides.salary_slip.salary_slip.get_money_in_words",
+                                    args: {
+                                        amount: Math.round(newAmount)
+                                    }
+                                },);
 
                                 frappe.model.set_value(earning.doctype, earning.name, "amount", newAmount);
 

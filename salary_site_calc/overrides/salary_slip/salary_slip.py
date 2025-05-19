@@ -31,3 +31,7 @@ def get_last_salary_structure(employee):
         return {'custom_site_percentage': last_salary_doc.custom_site_percentage}
 
     return None
+
+@frappe.whitelist()
+def get_money_in_words(amount, currency):
+    return money_in_words(amount, currency)
