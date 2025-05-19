@@ -15,9 +15,8 @@ frappe.ui.form.on('Salary Slip', {
                         if (sitePercentage !== null) {
                             console.log("Attendance Records:", attendanceRecordsLength);
                             console.log("Site Percentage:", sitePercentage);
-                            frm.doc.base_gross_pay = 1000;
-                            frm.doc.save();
-
+                            const earnings = frm.doc.earnings;
+                            console.log("Earnings:", earnings);
                         } else {
                             console.error("Failed to get site percentage.");
                         }
