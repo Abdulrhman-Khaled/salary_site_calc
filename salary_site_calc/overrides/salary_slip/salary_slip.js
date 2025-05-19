@@ -52,7 +52,7 @@ frappe.ui.form.on('Salary Slip', {
 
 function fetch_last_salary_structure(employee) {
     frappe.call({
-        method: "your_app_name.your_module_name.get_last_salary_structure",
+        method: "salary_site_calc.overrides.salary_slip.salary_slip.get_last_salary_structure",
         args: {
             employee: employee
         },
