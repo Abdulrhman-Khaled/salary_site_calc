@@ -27,12 +27,9 @@ frappe.ui.form.on('Salary Slip', {
                                 frm.doc.base_net_pay = newAmount;
                                 frm.doc.rounded_total = Math.round(newAmount);
                                 frm.doc.base_rounded_total = Math.round(newAmount);
-
                                 const amountInWords = await getMoneyInWords(newAmount);
-                                console.log("Amount in words:", amountInWords);
                                 frm.doc.total_in_words = amountInWords;
                                 frm.doc.base_total_in_words = amountInWords;
-
 
                                 frappe.model.set_value(earning.doctype, earning.name, "amount", newAmount);
 
