@@ -39,6 +39,9 @@ frappe.ui.form.on('Salary Slip', {
 
                                 frappe.model.set_value(earning.doctype, earning.name, "amount", newAmount);
 
+                                frm.doc.custom_days_on_site = paymentSiteDays;
+                                frm.doc.custom_days_on_office = paymentOfficeDays;
+
                                 frm.refresh_field("earnings");
                                 frm.refresh_field("base_gross_pay");
                                 frm.refresh_field("gross_pay");
@@ -50,6 +53,8 @@ frappe.ui.form.on('Salary Slip', {
                                 frm.refresh_field("base_total_in_words");
                                 frm.refresh_field("custom_total_office");
                                 frm.refresh_field("custom_total_site");
+                                frm.refresh_field("custom_days_on_site");
+                                frm.refresh_field("custom_days_on_office");
 
                             } else {
                                 console.error("No earnings found in salary slip.");
