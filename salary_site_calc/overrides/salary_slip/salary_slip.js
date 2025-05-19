@@ -36,6 +36,7 @@ frappe.ui.form.on('Salary Slip', {
             callback: function (response) {
                 if (response.message) {
                     console.log("Attendance Records:", response.message);
+                    fetch_last_salary_structure(frm.doc.employee);  
                 } else {
                     console.error("No records found.");
                 }
@@ -44,16 +45,26 @@ frappe.ui.form.on('Salary Slip', {
                 console.error("Error fetching attendance:", err);
             }
         });
-        // frappe.db.get_list('Salary Structure Assignment', {
-        //     filters: { 'employee': employee },
-        //     limit_page_length: 1
-        // }).then((salary_structure_doc) => {
-        //     console.log(salary_structure_doc[0]['name']);
-        //     frappe.get_doc('Salary Structure Assignment', salary_structure_doc[0]['name']).then((salary_doc) => {
-        //         console.log(salary_doc);
-
-        //     })
-        // });
+        
 
     }
 });
+
+function fetch_last_salary_structure(employee) {
+    frappe.call({
+        method: "your_app_name.your_module_name.get_last_salary_structure",
+        args: {
+            employee: employee
+        },
+        callback: function(response) {
+            if (response.message) {
+                console.log("Site Percentage:", response.message.site_percentage);
+            } else {
+                console.error("No salary structure found.");
+            }
+        },
+        error: function(err) {
+            console.error("Error fetching salary structure:", err);
+        }
+    });
+}

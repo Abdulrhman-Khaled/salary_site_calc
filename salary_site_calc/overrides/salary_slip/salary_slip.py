@@ -16,3 +16,17 @@ def get_attendance(employee, start_date, end_date):
         fields=['name', 'attendance_date', 'status', 'custom_shift_type']
     )
     return attendance_records
+
+@frappe.whitelist()
+def get_last_salary_structure(employee):
+    salary_structure_docs = frappe.get_list('Salary Structure Assignment', 
+        filters={'employee': employee},
+        order_by='creation desc',
+        limit_page_length=1
+    )
+
+    if salary_structure_docs:
+        last_salary_doc = frappe.get_doc('Salary Structure Assignment', salary_structure_docs[0]['name'])
+        return {'site_percentage': last_salary_doc.site_percentage}
+
+    return None
