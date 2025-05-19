@@ -19,6 +19,9 @@ frappe.ui.form.on('Salary Slip', {
                                 const salaryPerDay = earning.amount / frm.doc.payment_days;
                                 const newAmount = earning.amount + (attendanceRecordsLength * (sitePercentage * salaryPerDay / 100));
 
+                                const paymentOfficeDays = frm.doc.payment_days - attendanceRecordsLength;
+                                const paymentSiteDays = attendanceRecordsLength;
+
                                 earning.amount = newAmount;
 
                                 frm.doc.base_gross_pay = newAmount;
@@ -31,6 +34,9 @@ frappe.ui.form.on('Salary Slip', {
                                 frm.doc.total_in_words = amountInWords;
                                 frm.doc.base_total_in_words = amountInWords;
 
+                                frm.doc.custom_total_office = paymentOfficeDays * salaryPerDay;
+                                frm.doc.custom_total_site = paymentSiteDays * salaryPerDay + (paymentSiteDays * (sitePercentage * salaryPerDay / 100));
+
                                 frappe.model.set_value(earning.doctype, earning.name, "amount", newAmount);
 
                                 frm.refresh_field("earnings");
@@ -42,6 +48,8 @@ frappe.ui.form.on('Salary Slip', {
                                 frm.refresh_field("base_rounded_total");
                                 frm.refresh_field("total_in_words");
                                 frm.refresh_field("base_total_in_words");
+                                frm.refresh_field("custom_total_office");
+                                frm.refresh_field("custom_total_site");
 
                             } else {
                                 console.error("No earnings found in salary slip.");
