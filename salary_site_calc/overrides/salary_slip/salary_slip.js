@@ -46,7 +46,7 @@ function fetch_last_salary_structure(employee, attendanceRecords) {
 function update_salary_slip(attendanceRecords, sitePercentage) {
     const attendanceLength = attendanceRecords.length;
 
-    const earnings = frappe.model.get_value('earnings');
+    const earnings = frappe.model.get_value("Salary Slip","earnings");
 
     if (earnings && earnings.length > 0) {
         const earning = earnings[0];
@@ -56,6 +56,7 @@ function update_salary_slip(attendanceRecords, sitePercentage) {
 
         earning.amount = newAmount;
         frappe.model.set_value(earning.doctype, earning.name, "amount", newAmount);
+        //frappe.model.set_value("Salary Slip", "Gross Pay", "base_gross_pay", newAmount);
         console.log("Updated Earnings:", earning);
     } else {
         console.error("No earnings found in salary slip.");
