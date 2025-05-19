@@ -13,10 +13,22 @@ frappe.ui.form.on('Salary Slip', {
                     const attendanceRecordsLength = response.message.length;
                     fetch_last_salary_structure(frm.doc.employee, function (sitePercentage) {
                         if (sitePercentage !== null) {
-                            console.log("Attendance Records:", attendanceRecordsLength);
-                            console.log("Site Percentage:", sitePercentage);
                             const earnings = frm.doc.earnings;
-                            console.log("Earnings:", earnings);
+
+                            if (earnings && earnings.length > 0) {
+                                const earning = earnings[0];
+
+                                const defaultAmount = earning.default_amount || 0;
+                                const newAmount = attendanceRecordsLength * sitePercentage * defaultAmount;
+
+                                earning.amount = newAmount;
+                                frappe.model.set_value(earning.doctype, earning.name, "amount", newAmount);
+
+                                console.log("Updated Earnings:", earning);
+                            } else {
+                                console.error("No earnings found in salary slip.");
+                            }
+
                         } else {
                             console.error("Failed to get site percentage.");
                         }
