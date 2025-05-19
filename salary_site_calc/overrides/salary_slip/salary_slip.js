@@ -17,24 +17,30 @@ frappe.ui.form.on('Salary Slip', {
 
                             if (earnings && earnings.length > 0) {
                                 const earning = earnings[0];
-
-                                const defaultAmount = earning.default_amount || 0;
-                                const newAmount = attendanceRecordsLength * sitePercentage * defaultAmount;
+                                const salaryPerDay = earning.amount / payment_days;
+                                const newAmount = earning.amount + (attendanceRecordsLength * (sitePercentage * salaryPerDay / 100));
 
                                 earning.amount = newAmount;
+
                                 frm.doc.base_gross_pay = newAmount;
                                 frm.doc.gross_pay = newAmount;
+                                frm.doc.net_pay = newAmount;
+                                frm.doc.base_net_pay = newAmount;
+                                frm.doc.rounded_total = Math.round(newAmount);
+                                frm.doc.base_rounded_total = Math.round(newAmount);
+
                                 frappe.model.set_value(earning.doctype, earning.name, "amount", newAmount);
 
                                 frm.refresh_field("earnings");
                                 frm.refresh_field("base_gross_pay");
                                 frm.refresh_field("gross_pay");
-
-                                console.log("Updated Earnings:", earning);
+                                frm.refresh_field("net_pay");
+                                frm.refresh_field("base_net_pay");
+                                frm.refresh_field("rounded_total");
+                                frm.refresh_field("base_rounded_total");
                             } else {
                                 console.error("No earnings found in salary slip.");
                             }
-
                         } else {
                             console.error("Failed to get site percentage.");
                         }
@@ -67,24 +73,4 @@ function fetch_last_salary_structure(employee, callback) {
             console.error("Error fetching salary structure:", err);
         }
     });
-}
-
-function update_salary_slip(attendanceRecords, sitePercentage) {
-    const attendanceLength = attendanceRecords.length;
-
-    const earnings = frappe.model.get_value("Salary Slip", "earnings");
-
-    if (earnings && earnings.length > 0) {
-        const earning = earnings[0];
-
-        const defaultAmount = earning.default_amount || 0;
-        const newAmount = attendanceLength * sitePercentage * defaultAmount;
-
-        earning.amount = newAmount;
-        frappe.model.set_value(earning.doctype, earning.name, "amount", newAmount);
-        //frappe.model.set_value("Salary Slip", "Gross Pay", "base_gross_pay", newAmount);
-        console.log("Updated Earnings:", earning);
-    } else {
-        console.error("No earnings found in salary slip.");
-    }
 }
