@@ -17,7 +17,7 @@ frappe.ui.form.on('Salary Slip', {
 
                             if (earnings && earnings.length > 0) {
                                 const earning = earnings[0];
-                                const salaryPerDay = earning.amount / payment_days;
+                                const salaryPerDay = earning.amount / frm.doc.payment_days;
                                 const newAmount = earning.amount + (attendanceRecordsLength * (sitePercentage * salaryPerDay / 100));
 
                                 earning.amount = newAmount;
