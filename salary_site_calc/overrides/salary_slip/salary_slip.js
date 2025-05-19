@@ -27,7 +27,7 @@ frappe.ui.form.on('Salary Slip', {
 
     employee: function (frm) {
         frappe.call({
-            method: "salary_slip_calc.overrides.salary_slip.salary_slip.fetch_attendance",
+            method: "salary_site_calc.overrides.salary_slip.salary_slip.fetch_attendance",
             args: {
                 employee: frm.doc.employee,
                 start_date: frm.doc.start_date,
