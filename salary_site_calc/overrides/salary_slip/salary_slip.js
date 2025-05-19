@@ -10,7 +10,7 @@ frappe.ui.form.on('Salary Slip', {
             callback: function (response) {
                 if (response.message) {
                     const attendanceRecordsLength = response.message.length;
-                    fetch_last_salary_structure(frm.doc.employee, function (sitePercentage) {
+                    fetch_last_salary_structure(frm.doc.employee, async function (sitePercentage) {
                         if (sitePercentage !== null) {
                             const earnings = frm.doc.earnings;
 
@@ -27,20 +27,12 @@ frappe.ui.form.on('Salary Slip', {
                                 frm.doc.base_net_pay = newAmount;
                                 frm.doc.rounded_total = Math.round(newAmount);
                                 frm.doc.base_rounded_total = Math.round(newAmount);
-                                frappe.call({
-                                    method: "salary_site_calc.overrides.salary_slip.salary_slip.get_money_in_words",
-                                    args: {
-                                        amount: Math.round(newAmount)
-                                    }
-                                    ,
-                                    callback: function (response) {
-                                        if (response.message) {
-                                            frm.doc.total_in_words = response.message;
-                                            frm.doc.base_total_in_words = response.message;
-                                        }
-                                    }
-                                }
-                                );
+
+                                const amountInWords = await getMoneyInWords(newAmount);
+                                console.log("Amount in words:", amountInWords);
+                                frm.doc.total_in_words = amountInWords;
+                                frm.doc.base_total_in_words = amountInWords;
+
 
                                 frappe.model.set_value(earning.doctype, earning.name, "amount", newAmount);
 
@@ -88,5 +80,26 @@ function fetch_last_salary_structure(employee, callback) {
         error: function (err) {
             console.error("Error fetching salary structure:", err);
         }
+    });
+}
+
+function getMoneyInWords(amount) {
+    return new Promise((resolve, reject) => {
+        frappe.call({
+            method: "salary_site_calc.overrides.salary_slip.salary_slip.get_money_in_words",
+            args: {
+                amount: Math.round(amount)
+            },
+            callback: function(response) {
+                if (response.message) {
+                    resolve(response.message);
+                } else {
+                    reject("No message received");
+                }
+            },
+            error: function(err) {
+                reject(err);
+            }
+        });
     });
 }
