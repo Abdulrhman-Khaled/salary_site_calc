@@ -22,7 +22,11 @@ frappe.ui.form.on('Salary Slip', {
                                 const newAmount = attendanceRecordsLength * sitePercentage * defaultAmount;
 
                                 earning.amount = newAmount;
+                                frm.doc.base_gross_pay = newAmount;
+                                frm.doc.gross_pay = newAmount;
                                 frappe.model.set_value(earning.doctype, earning.name, "amount", newAmount);
+
+                                frm.refresh_field("earnings");
 
                                 console.log("Updated Earnings:", earning);
                             } else {
