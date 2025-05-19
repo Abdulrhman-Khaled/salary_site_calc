@@ -10,12 +10,13 @@ frappe.ui.form.on('Salary Slip', {
             },
             callback: function (response) {
                 if (response.message) {
-                    console.log("Attendance Records:", response.message.length);
                     const attendanceRecordsLength = response.message.length;
                     fetch_last_salary_structure(frm.doc.employee, function (sitePercentage) {
                         if (sitePercentage !== null) {
-                            // Now update the salary slip using the site percentage
+                            console.log("Attendance Records:", attendanceRecordsLength);
+                            console.log("Site Percentage:", sitePercentage);
                             frm.doc.base_gross_pay = 1000;
+                            frm.doc.save();
 
                         } else {
                             console.error("Failed to get site percentage.");
@@ -40,7 +41,6 @@ function fetch_last_salary_structure(employee, callback) {
         },
         callback: function (response) {
             if (response.message) {
-                console.log("Site Percentage:", response.message.custom_site_percentage);
                 callback(response.message.custom_site_percentage);
             } else {
                 console.error("No salary structure found.");
