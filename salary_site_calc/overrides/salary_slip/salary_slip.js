@@ -58,7 +58,7 @@ function fetch_last_salary_structure(employee) {
         },
         callback: function(response) {
             if (response.message) {
-                console.log("Site Percentage:", response.message.site_percentage);
+                console.log("Site Percentage:", response.message.custom_site_percentage);
             } else {
                 console.error("No salary structure found.");
             }

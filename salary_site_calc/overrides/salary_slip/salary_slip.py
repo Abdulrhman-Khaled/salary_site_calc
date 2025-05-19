@@ -27,6 +27,6 @@ def get_last_salary_structure(employee):
 
     if salary_structure_docs:
         last_salary_doc = frappe.get_doc('Salary Structure Assignment', salary_structure_docs[0]['name'])
-        return {'site_percentage': last_salary_doc.site_percentage}
+        return {'custom_site_percentage': last_salary_doc.custom_site_percentage}
 
     return None
