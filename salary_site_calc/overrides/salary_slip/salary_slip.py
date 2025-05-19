@@ -1,5 +1,6 @@
 import frappe
 from frappe.utils import getdate
+from frappe.utils import money_in_words
 
 @frappe.whitelist()
 def fetch_attendance(employee, start_date, end_date):
@@ -30,3 +31,7 @@ def get_last_salary_structure(employee):
         return {'custom_site_percentage': last_salary_doc.custom_site_percentage}
 
     return None
+
+@frappe.whitelist()
+def money_in_words(amount):
+    return money_in_words(amount)

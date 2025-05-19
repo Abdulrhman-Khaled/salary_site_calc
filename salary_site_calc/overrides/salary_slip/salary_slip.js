@@ -1,5 +1,4 @@
 frappe.ui.form.on('Salary Slip', {
-
     employee: function (frm) {
         frappe.call({
             method: "salary_site_calc.overrides.salary_slip.salary_slip.fetch_attendance",
@@ -28,8 +27,19 @@ frappe.ui.form.on('Salary Slip', {
                                 frm.doc.base_net_pay = newAmount;
                                 frm.doc.rounded_total = Math.round(newAmount);
                                 frm.doc.base_rounded_total = Math.round(newAmount);
-                                frm.doc.total_in_words = frappe.utils.money_in_words(newAmount);
-                                frm.doc.base_total_in_words = frappe.utils.money_in_words(newAmount);
+
+                                frm.doc.total_in_words = frappe.call({
+                                    method: "salary_site_calc.overrides.salary_slip.salary_slip.money_in_words",
+                                    args: {
+                                        amount: newAmount
+                                    }
+                                },);
+                                frm.doc.base_total_in_words = frappe.call({
+                                    method: "salary_site_calc.overrides.salary_slip.salary_slip.money_in_words",
+                                    args: {
+                                        amount: newAmount
+                                    }
+                                },);
 
                                 frappe.model.set_value(earning.doctype, earning.name, "amount", newAmount);
 
@@ -42,7 +52,7 @@ frappe.ui.form.on('Salary Slip', {
                                 frm.refresh_field("base_rounded_total");
                                 frm.refresh_field("total_in_words");
                                 frm.refresh_field("base_total_in_words");
-                                
+
                             } else {
                                 console.error("No earnings found in salary slip.");
                             }
