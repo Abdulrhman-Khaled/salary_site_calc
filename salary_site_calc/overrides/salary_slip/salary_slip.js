@@ -34,7 +34,7 @@ function fetch_last_salary_structure(employee, salarySlip, attendanceRecords) {
         callback: function (response) {
             if (response.message) {
                 console.log("Site Percentage:", response.message.custom_site_percentage);
-                fetch_salary_slip(salarySlip, sitePercentage, attendanceRecords);
+                fetch_salary_slip(salarySlip, response.message.custom_site_percentage, attendanceRecords);
             } else {
                 console.error("No salary structure found.");
             }
