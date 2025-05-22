@@ -92,7 +92,7 @@ frappe.ui.form.on('Salary Slip', {
         }
     },
 
-    on_submit: function (frm) {
+    onsave: function (frm) {
         frappe.call({
             method: "salary_site_calc.overrides.salary_slip.salary_slip.fetch_attendance",
             args: {
@@ -135,6 +135,9 @@ frappe.ui.form.on('Salary Slip', {
                                 frm.doc.custom_days_on_site = paymentSiteDays;
                                 frm.doc.custom_days_on_office = paymentOfficeDays;
 
+                                frm.doc.gross_year_to_date = newAmount;
+                                frm.doc.base_gross_year_to_date = newAmount;
+
                                 frm.refresh_field("earnings");
                                 frm.refresh_field("base_gross_pay");
                                 frm.refresh_field("gross_pay");
@@ -148,6 +151,8 @@ frappe.ui.form.on('Salary Slip', {
                                 frm.refresh_field("custom_total_site");
                                 frm.refresh_field("custom_days_on_site");
                                 frm.refresh_field("custom_days_on_office");
+                                frm.refresh_field("gross_year_to_date");
+                                frm.refresh_field("base_gross_year_to_date");
 
                             } else {
                                 console.error("No earnings found in salary slip.");
