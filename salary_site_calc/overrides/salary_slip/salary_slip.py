@@ -34,4 +34,6 @@ def get_last_salary_structure(employee):
 
 @frappe.whitelist()
 def get_money_in_words(amount):
+    if isinstance(amount, float) and (amount != amount):
+        amount = 0.0
     return money_in_words(amount)

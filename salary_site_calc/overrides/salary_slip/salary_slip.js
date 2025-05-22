@@ -71,7 +71,12 @@ frappe.ui.form.on('Salary Slip', {
                 console.error("Error fetching attendance:", err);
             }
         });
+    },
+
+    onload: function (frm) {
+        frm.set_value('posting_date', null);
     }
+
 });
 
 function fetch_last_salary_structure(employee, callback) {
@@ -100,14 +105,14 @@ function getMoneyInWords(amount) {
             args: {
                 amount: Math.round(amount)
             },
-            callback: function(response) {
+            callback: function (response) {
                 if (response.message) {
                     resolve(response.message);
                 } else {
                     reject("No message received");
                 }
             },
-            error: function(err) {
+            error: function (err) {
                 reject(err);
             }
         });
