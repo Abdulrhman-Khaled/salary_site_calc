@@ -1,5 +1,6 @@
 frappe.ui.form.on('Salary Slip', {
-    employee: function (frm) {
+    posting_date: function (frm) {
+        
         frappe.call({
             method: "salary_site_calc.overrides.salary_slip.salary_slip.fetch_attendance",
             args: {
@@ -72,6 +73,8 @@ frappe.ui.form.on('Salary Slip', {
             }
         });
     },
+
+
 });
 
 function fetch_last_salary_structure(employee, callback) {
