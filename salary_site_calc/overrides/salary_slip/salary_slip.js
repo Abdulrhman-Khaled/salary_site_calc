@@ -92,7 +92,7 @@ frappe.ui.form.on('Salary Slip', {
         }
     },
 
-    onsave: function (frm) {
+    after_insert: function (frm) {
         frappe.call({
             method: "salary_site_calc.overrides.salary_slip.salary_slip.fetch_attendance",
             args: {
