@@ -80,6 +80,10 @@ frappe.ui.form.on('Salary Slip', {
     posting_date: function (frm) {
         if (frm.doc.posting_date) {
             frm.set_df_property('employee', 'read_only', 0);
+            frm.refresh_field('start_date');
+            frm.refresh_field('end_date');
+            frm.refresh_field('employee');
+
         } else {
             frm.set_df_property('employee', 'read_only', 1);
             frm.set_value('employee', null);
