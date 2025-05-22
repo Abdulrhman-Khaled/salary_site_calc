@@ -68,6 +68,7 @@ frappe.ui.form.on('Salary Slip', {
                                 frm.refresh_field("base_year_to_date");
                                 frm.refresh_field("month_to_date");
                                 frm.refresh_field("base_month_to_date");
+                                frm.save();
                             } else {
                                 console.error("No earnings found in salary slip.");
                             }
@@ -168,6 +169,8 @@ frappe.ui.form.on('Salary Slip', {
                                 frm.refresh_field("base_year_to_date");
                                 frm.refresh_field("month_to_date");
                                 frm.refresh_field("base_month_to_date");
+                                frm.save();
+                                
                             } else {
                                 console.error("No earnings found in salary slip.");
                             }
@@ -254,6 +257,7 @@ frappe.ui.form.on('Salary Slip', {
                                 frm.refresh_field("base_year_to_date");
                                 frm.refresh_field("month_to_date");
                                 frm.refresh_field("base_month_to_date");
+                                frm.save();
                             } else {
                                 console.error("No earnings found in salary slip.");
                             }
