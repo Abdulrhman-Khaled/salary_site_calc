@@ -88,8 +88,6 @@ frappe.ui.form.on('Salary Slip', {
 
     onload: function (frm) {
         frm.set_df_property('employee', 'read_only', 1);
-
-
     },
 
     onload_post_render: function (frm) {
@@ -367,8 +365,6 @@ frappe.ui.form.on('Salary Slip', {
             }
         });
     }
-
-
 });
 
 function fetch_last_salary_structure(employee, callback) {
