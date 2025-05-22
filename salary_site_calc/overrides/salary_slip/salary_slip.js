@@ -1,6 +1,5 @@
 frappe.ui.form.on('Salary Slip', {
-    posting_date: function (frm) {
-        
+    employee: function (frm) {
         frappe.call({
             method: "salary_site_calc.overrides.salary_slip.salary_slip.fetch_attendance",
             args: {
@@ -73,6 +72,19 @@ frappe.ui.form.on('Salary Slip', {
             }
         });
     },
+
+    onload: function (frm) {
+        frm.set_df_property('employee', 'read_only', 1);
+    },
+
+    posting_date: function (frm) {
+        if (frm.doc.posting_date) {
+            frm.set_df_property('employee', 'read_only', 0);
+        } else {
+            frm.set_df_property('employee', 'read_only', 1);
+            frm.set_value('employee', null);
+        }
+    }
 
 
 });
