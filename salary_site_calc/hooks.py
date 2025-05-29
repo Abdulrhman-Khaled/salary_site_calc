@@ -31,9 +31,6 @@ doctype_js = {
     "Salary Slip" : "overrides/salary_slip/salary_slip.js",
 }
 
-override_whitelisted_methods = {
-    "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance": "salary_site_calc.salary_site_calc.attendance_override.mark_employee_attendance"
-}
 # doctype_js = {"doctype" : "public/js/doctype.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -115,9 +112,9 @@ override_whitelisted_methods = {
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	"hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool": "salary_site_calc.overrides.employee_attendance_tool"
+}
 
 # Document Events
 # ---------------
