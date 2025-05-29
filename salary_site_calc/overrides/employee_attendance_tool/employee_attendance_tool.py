@@ -7,7 +7,7 @@ from frappe.utils import getdate
 
 
 @frappe.whitelist()
-def mark_employee_attendance(
+def mark_employee_attendance_custom(
 	employee_list: list | str,
 	status: str,
 	date: str | datetime.date,
