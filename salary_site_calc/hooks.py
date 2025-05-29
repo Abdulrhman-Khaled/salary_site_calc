@@ -113,7 +113,7 @@ doctype_js = {
 # Override standard doctype classes
 
 override_doctype_class = {
-	"Employee Attendance Tool": "salary_site_calc.overrides.employee_attendance_tool"
+	"Employee Attendance Tool": "salary_site_calc.overrides.employee_attendance_tool.employee_attendance_tool"
 }
 
 # Document Events
