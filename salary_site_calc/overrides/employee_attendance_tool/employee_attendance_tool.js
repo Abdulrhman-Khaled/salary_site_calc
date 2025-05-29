@@ -206,7 +206,7 @@ frappe.ui.form.on("Employee Attendance Tool", {
 
 		frappe
 			.call({
-				method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
+				method: "salary_site_calc.overrides.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
 				args: {
 					employee_list: marked_employees,
 					status: frm.doc.status,
