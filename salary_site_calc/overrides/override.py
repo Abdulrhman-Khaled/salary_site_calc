@@ -20,7 +20,7 @@ def custom_mark_employee_attendance(
 	if isinstance(employee_list, str):
 		employee_list = json.loads(employee_list)
 
-	doc = frappe.get_cached_doc("Employee Attendance Tool")
+	doc = frappe.get_doc("Employee Attendance Tool")
 
 	for employee in employee_list:
 		leave_type = None
