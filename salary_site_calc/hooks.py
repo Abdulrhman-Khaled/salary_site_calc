@@ -158,9 +158,9 @@ doctype_js = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance": "salary_site_calc.overrides.employee_attendance_tool.employee_attendance_tool.custom_mark_employee_attendance"
-# }
+override_whitelisted_methods = {
+	"hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance": "salary_site_calc.overrides.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
