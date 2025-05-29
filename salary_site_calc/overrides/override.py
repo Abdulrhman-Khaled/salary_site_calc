@@ -21,6 +21,7 @@ def custom_mark_employee_attendance(
 		employee_list = json.loads(employee_list)
 
 	doc = frappe.get_doc("Employee Attendance Tool")
+	print(doc)
 
 	for employee in employee_list:
 		leave_type = None
