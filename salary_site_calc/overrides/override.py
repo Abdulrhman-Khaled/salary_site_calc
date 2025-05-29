@@ -16,7 +16,6 @@ def custom_mark_employee_attendance(
 	late_entry: int | None = None,
 	early_exit: int | None = None,
 	shift: str | None = None,
-	custom_shift_type: str | None = None
 ) -> None:
 	if isinstance(employee_list, str):
 		employee_list = json.loads(employee_list)
@@ -25,6 +24,12 @@ def custom_mark_employee_attendance(
 		leave_type = None
 		if status == "On Leave" and leave_type:
 			leave_type = leave_type
+	for employee in employee_list:
+		attendance_tool = frappe.get_value(
+            "Employee Attendance Tool",
+            {"employee": employee, "date": date},
+            "custome_shift_type"
+        )
 
 		attendance = frappe.get_doc(
 			dict(
@@ -36,7 +41,7 @@ def custom_mark_employee_attendance(
 				late_entry=late_entry,
 				early_exit=early_exit,
 				shift=shift,
-				custom_shift_type="Site"
+				custom_shift_type=attendance_tool
 			)
 		)
 		attendance.insert()
