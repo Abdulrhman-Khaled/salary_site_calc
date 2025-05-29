@@ -159,7 +159,7 @@ doctype_js = {
 # ------------------------------
 #
 override_whitelisted_methods = {
-	"hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance":"salary_site_calc.overrides.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance_custom"
+	"hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance":"salary_site_calc.salary_site_calc.overrides.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance"
 }
 #
 # each overriding function accepts a `data` argument;
