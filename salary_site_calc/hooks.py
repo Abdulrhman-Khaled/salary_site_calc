@@ -29,6 +29,8 @@ app_license = "MIT"
 # include js in doctype views
 doctype_js = {
     "Salary Slip" : "overrides/salary_slip/salary_slip.js",
+    "Employee Attendance Tool": "salary_site_calc.overrides.employee_attendance_tool.employee_attendance_tool.js"
+
 }
 
 # doctype_js = {"doctype" : "public/js/doctype.js"}
@@ -113,7 +115,7 @@ doctype_js = {
 # Override standard doctype classes
 
 override_doctype_class = {
-	"Employee Attendance Tool": "salary_site_calc.overrides.employee_attendance_tool.employee_attendance_tool"
+	"Employee Attendance Tool": "salary_site_calc.overrides.employee_attendance_tool.employee_attendance_tool.EmployeeAttendanceTool"
 }
 
 # Document Events
