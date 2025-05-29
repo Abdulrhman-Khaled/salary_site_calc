@@ -29,7 +29,7 @@ app_license = "MIT"
 # include js in doctype views
 doctype_js = {
     "Salary Slip" : "overrides/salary_slip/salary_slip.js",
-    "Employee Attendance Tool": "salary_site_calc.overrides.employee_attendance_tool.employee_attendance_tool.js"
+    "Employee Attendance Tool": "overrides/employee_attendance_tool/employee_attendance_tool.js"
 
 }
 
@@ -114,9 +114,9 @@ doctype_js = {
 # ---------------
 # Override standard doctype classes
 
-override_doctype_class = {
-	"Employee Attendance Tool": "salary_site_calc.overrides.employee_attendance_tool.employee_attendance_tool.EmployeeAttendanceTool"
-}
+# override_doctype_class = {
+# 	"Employee Attendance Tool": "salary_site_calc.overrides.employee_attendance_tool.employee_attendance_tool.EmployeeAttendanceTool"
+# }
 
 # Document Events
 # ---------------
@@ -159,9 +159,9 @@ override_doctype_class = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "salary_site_calc.event.get_events"
-# }
+override_whitelisted_methods = {
+	"hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance": "salary_site_calc.overrides.employee_attendance_tool.mark_employee_attendance"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
