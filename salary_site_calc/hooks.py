@@ -30,6 +30,10 @@ app_license = "MIT"
 doctype_js = {
     "Salary Slip" : "overrides/salary_slip/salary_slip.js",
 }
+
+override_whitelisted_methods = {
+    "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance": "salary_site_calc.attendance_override.mark_employee_attendance"
+}
 # doctype_js = {"doctype" : "public/js/doctype.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
