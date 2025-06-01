@@ -21,7 +21,7 @@ def custom_mark_employee_attendance(
 		employee_list = json.loads(employee_list)
 
 	doc = frappe.get_doc("Employee Attendance Tool")
-	frappe.msgprint(doc)
+	frappe.msgprint(json.loads(doc))
 	print("doc.custom_shift_type")
 	print(json.loads(doc))
 
