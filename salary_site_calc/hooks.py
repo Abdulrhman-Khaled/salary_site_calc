@@ -29,7 +29,7 @@ app_license = "MIT"
 # include js in doctype views
 doctype_js = {
     "Salary Slip" : "overrides/salary_slip/salary_slip.js",
-    # "Employee Attendance Tool": "overrides/employee_attendance_tool/employee_attendance_tool.js"
+    "Employee Attendance Tool": "public/js/employee_attendance_tool.js"
 }
 
 # doctype_js = {"doctype" : "public/js/doctype.js"}
