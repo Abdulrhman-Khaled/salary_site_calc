@@ -24,12 +24,11 @@ app_license = "MIT"
 # webform_include_css = {"doctype": "public/css/doctype.css"}
 
 # include js in page
-# page_js = {"page" : "public/js/file.js"}
+page_js = {"employee-attendance-tool": "public/js/employee_attendance_tool.js"}
 
 # include js in doctype views
 doctype_js = {
     "Salary Slip" : "overrides/salary_slip/salary_slip.js",
-    "Employee Attendance Tool": "public/js/employee_attendance_tool.js"
 }
 
 # doctype_js = {"doctype" : "public/js/doctype.js"}

@@ -16,6 +16,7 @@ def custom_mark_employee_attendance(
 	late_entry: int | None = None,
 	early_exit: int | None = None,
 	shift: str | None = None,
+	custom_shift_type: str | None = None,
 	
 ) -> None:
 	if isinstance(employee_list, str):
@@ -35,7 +36,7 @@ def custom_mark_employee_attendance(
 				late_entry=late_entry,
 				early_exit=early_exit,
 				shift=shift,
-				custom_shift_type=doc.custom_shift_type
+				custom_shift_type=custom_shift_type
 			)
 		)
 		attendance.insert()
