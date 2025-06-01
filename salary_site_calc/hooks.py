@@ -10,7 +10,7 @@ app_license = "MIT"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/salary_site_calc/css/salary_site_calc.css"
-app_include_js = "public/js/employee_attendance_tool.js"
+app_include_js = "assets/salary_site_calc/js/employee_attendance_tool.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/salary_site_calc/css/salary_site_calc.css"
