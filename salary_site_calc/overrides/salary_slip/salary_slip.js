@@ -1,89 +1,6 @@
 frappe.ui.form.on('Salary Slip', {
     employee: function (frm) {
-        frappe.call({
-            method: "salary_site_calc.overrides.salary_slip.salary_slip.fetch_attendance",
-            args: {
-                employee: frm.doc.employee,
-                start_date: frm.doc.start_date,
-                end_date: frm.doc.end_date
-            },
-            callback: function (response) {
-                if (response.message) {
-                    const attendanceRecordsLength = response.message.length;
-                    fetch_last_salary_structure(frm.doc.employee, async function (sitePercentage) {
-                        if (sitePercentage !== null) {
-                            const earnings = frm.doc.earnings;
-
-                            if (earnings && earnings.length > 0) {
-                                const earning = earnings[0];
-                                const salaryPerDay = earning.amount / frm.doc.payment_days;
-                                const newAmount = earning.amount + (attendanceRecordsLength * (sitePercentage * salaryPerDay / 100));
-
-                                const paymentOfficeDays = frm.doc.payment_days - attendanceRecordsLength;
-                                const paymentSiteDays = attendanceRecordsLength;
-
-                                earning.amount = newAmount;
-
-                                frm.doc.base_gross_pay = newAmount;
-                                frm.doc.gross_pay = newAmount;
-                                frm.doc.net_pay = newAmount;
-                                frm.doc.base_net_pay = newAmount;
-                                frm.doc.rounded_total = Math.round(newAmount);
-                                frm.doc.base_rounded_total = Math.round(newAmount);
-                                const amountInWords = await getMoneyInWords(newAmount);
-                                frm.doc.total_in_words = amountInWords;
-                                frm.doc.base_total_in_words = amountInWords;
-
-                                frm.doc.custom_total_office = paymentOfficeDays * salaryPerDay;
-                                frm.doc.custom_total_site = paymentSiteDays * salaryPerDay + (paymentSiteDays * (sitePercentage * salaryPerDay / 100));
-
-                                frappe.model.set_value(earning.doctype, earning.name, "amount", newAmount);
-
-                                frm.doc.custom_days_on_site = paymentSiteDays;
-                                frm.doc.custom_days_on_office = paymentOfficeDays;
-
-                                frm.doc.gross_year_to_date = newAmount;
-                                frm.doc.base_gross_year_to_date = newAmount;
-                                frm.doc.year_to_date = newAmount;
-                                frm.doc.base_year_to_date = newAmount;
-                                frm.doc.month_to_date = newAmount;
-                                frm.doc.base_month_to_date = newAmount;
-
-                                frm.refresh_field("earnings");
-                                frm.refresh_field("base_gross_pay");
-                                frm.refresh_field("gross_pay");
-                                frm.refresh_field("net_pay");
-                                frm.refresh_field("base_net_pay");
-                                frm.refresh_field("rounded_total");
-                                frm.refresh_field("base_rounded_total");
-                                frm.refresh_field("total_in_words");
-                                frm.refresh_field("base_total_in_words");
-                                frm.refresh_field("custom_total_office");
-                                frm.refresh_field("custom_total_site");
-                                frm.refresh_field("custom_days_on_site");
-                                frm.refresh_field("custom_days_on_office");
-                                frm.refresh_field("gross_year_to_date");
-                                frm.refresh_field("base_gross_year_to_date");
-                                frm.refresh_field("year_to_date");
-                                frm.refresh_field("base_year_to_date");
-                                frm.refresh_field("month_to_date");
-                                frm.refresh_field("base_month_to_date");
-                                frm.save();
-                            } else {
-                                console.error("No earnings found in salary slip.");
-                            }
-                        } else {
-                            console.error("Failed to get site percentage.");
-                        }
-                    });
-                } else {
-                    console.error("No records found.");
-                }
-            },
-            error: function (err) {
-                console.error("Error fetching attendance:", err);
-            }
-        });
+        process_salary_calculation(frm);
     },
 
     onload: function (frm) {
@@ -91,94 +8,9 @@ frappe.ui.form.on('Salary Slip', {
     },
 
     onload_post_render: function (frm) {
-        if (frm.doc.status == "Submitted" || (frm.doc.status == "Draft" && frm.doc.employee)) {
-            frappe.call({
-                method: "salary_site_calc.overrides.salary_slip.salary_slip.fetch_attendance",
-                args: {
-                    employee: frm.doc.employee,
-                    start_date: frm.doc.start_date,
-                    end_date: frm.doc.end_date
-                },
-                callback: function (response) {
-                    if (response.message) {
-                        const attendanceRecordsLength = response.message.length;
-                        fetch_last_salary_structure(frm.doc.employee, async function (sitePercentage) {
-                            if (sitePercentage !== null) {
-                                const earnings = frm.doc.earnings;
-
-                                if (earnings && earnings.length > 0) {
-                                    const earning = earnings[0];
-                                    const salaryPerDay = earning.amount / frm.doc.payment_days;
-                                    const newAmount = earning.amount + (attendanceRecordsLength * (sitePercentage * salaryPerDay / 100));
-
-                                    const paymentOfficeDays = frm.doc.payment_days - attendanceRecordsLength;
-                                    const paymentSiteDays = attendanceRecordsLength;
-
-                                    earning.amount = newAmount;
-
-                                    frm.doc.base_gross_pay = newAmount;
-                                    frm.doc.gross_pay = newAmount;
-                                    frm.doc.net_pay = newAmount;
-                                    frm.doc.base_net_pay = newAmount;
-                                    frm.doc.rounded_total = Math.round(newAmount);
-                                    frm.doc.base_rounded_total = Math.round(newAmount);
-                                    const amountInWords = await getMoneyInWords(newAmount);
-                                    frm.doc.total_in_words = amountInWords;
-                                    frm.doc.base_total_in_words = amountInWords;
-
-                                    frm.doc.custom_total_office = paymentOfficeDays * salaryPerDay;
-                                    frm.doc.custom_total_site = paymentSiteDays * salaryPerDay + (paymentSiteDays * (sitePercentage * salaryPerDay / 100));
-
-                                    frappe.model.set_value(earning.doctype, earning.name, "amount", newAmount);
-
-                                    frm.doc.custom_days_on_site = paymentSiteDays;
-                                    frm.doc.custom_days_on_office = paymentOfficeDays;
-
-                                    frm.doc.gross_year_to_date = newAmount;
-                                    frm.doc.base_gross_year_to_date = newAmount;
-                                    frm.doc.year_to_date = newAmount;
-                                    frm.doc.base_year_to_date = newAmount;
-                                    frm.doc.month_to_date = newAmount;
-                                    frm.doc.base_month_to_date = newAmount;
-
-                                    frm.refresh_field("earnings");
-                                    frm.refresh_field("base_gross_pay");
-                                    frm.refresh_field("gross_pay");
-                                    frm.refresh_field("net_pay");
-                                    frm.refresh_field("base_net_pay");
-                                    frm.refresh_field("rounded_total");
-                                    frm.refresh_field("base_rounded_total");
-                                    frm.refresh_field("total_in_words");
-                                    frm.refresh_field("base_total_in_words");
-                                    frm.refresh_field("custom_total_office");
-                                    frm.refresh_field("custom_total_site");
-                                    frm.refresh_field("custom_days_on_site");
-                                    frm.refresh_field("custom_days_on_office");
-                                    frm.refresh_field("gross_year_to_date");
-                                    frm.refresh_field("base_gross_year_to_date");
-                                    frm.refresh_field("year_to_date");
-                                    frm.refresh_field("base_year_to_date");
-                                    frm.refresh_field("month_to_date");
-                                    frm.refresh_field("base_month_to_date");
-                                    frm.save();
-
-                                } else {
-                                    console.error("No earnings found in salary slip.");
-                                }
-                            } else {
-                                console.error("Failed to get site percentage.");
-                            }
-                        });
-                    } else {
-                        console.error("No records found.");
-                    }
-                },
-                error: function (err) {
-                    console.error("Error fetching attendance:", err);
-                }
-            });
+        if (frm.doc.status === "Submitted" || (frm.doc.status === "Draft" && frm.doc.employee)) {
+            process_salary_calculation(frm);
         }
-
     },
 
     posting_date: function (frm) {
@@ -192,180 +24,100 @@ frappe.ui.form.on('Salary Slip', {
     },
 
     after_save: function (frm) {
-        frappe.call({
-            method: "salary_site_calc.overrides.salary_slip.salary_slip.fetch_attendance",
-            args: {
-                employee: frm.doc.employee,
-                start_date: frm.doc.start_date,
-                end_date: frm.doc.end_date
-            },
-            callback: function (response) {
-                if (response.message) {
-                    const attendanceRecordsLength = response.message.length;
-                    fetch_last_salary_structure(frm.doc.employee, async function (sitePercentage) {
-                        if (sitePercentage !== null) {
-                            const earnings = frm.doc.earnings;
-
-                            if (earnings && earnings.length > 0) {
-                                const earning = earnings[0];
-                                const salaryPerDay = earning.amount / frm.doc.payment_days;
-                                const newAmount = earning.amount + (attendanceRecordsLength * (sitePercentage * salaryPerDay / 100));
-
-                                const paymentOfficeDays = frm.doc.payment_days - attendanceRecordsLength;
-                                const paymentSiteDays = attendanceRecordsLength;
-
-                                earning.amount = newAmount;
-
-                                frm.doc.base_gross_pay = newAmount;
-                                frm.doc.gross_pay = newAmount;
-                                frm.doc.net_pay = newAmount;
-                                frm.doc.base_net_pay = newAmount;
-                                frm.doc.rounded_total = Math.round(newAmount);
-                                frm.doc.base_rounded_total = Math.round(newAmount);
-                                const amountInWords = await getMoneyInWords(newAmount);
-                                frm.doc.total_in_words = amountInWords;
-                                frm.doc.base_total_in_words = amountInWords;
-
-                                frm.doc.custom_total_office = paymentOfficeDays * salaryPerDay;
-                                frm.doc.custom_total_site = paymentSiteDays * salaryPerDay + (paymentSiteDays * (sitePercentage * salaryPerDay / 100));
-
-                                frappe.model.set_value(earning.doctype, earning.name, "amount", newAmount);
-
-                                frm.doc.custom_days_on_site = paymentSiteDays;
-                                frm.doc.custom_days_on_office = paymentOfficeDays;
-
-                                frm.doc.gross_year_to_date = newAmount;
-                                frm.doc.base_gross_year_to_date = newAmount;
-                                frm.doc.year_to_date = newAmount;
-                                frm.doc.base_year_to_date = newAmount;
-                                frm.doc.month_to_date = newAmount;
-                                frm.doc.base_month_to_date = newAmount;
-
-                                frm.refresh_field("earnings");
-                                frm.refresh_field("base_gross_pay");
-                                frm.refresh_field("gross_pay");
-                                frm.refresh_field("net_pay");
-                                frm.refresh_field("base_net_pay");
-                                frm.refresh_field("rounded_total");
-                                frm.refresh_field("base_rounded_total");
-                                frm.refresh_field("total_in_words");
-                                frm.refresh_field("base_total_in_words");
-                                frm.refresh_field("custom_total_office");
-                                frm.refresh_field("custom_total_site");
-                                frm.refresh_field("custom_days_on_site");
-                                frm.refresh_field("custom_days_on_office");
-                                frm.refresh_field("gross_year_to_date");
-                                frm.refresh_field("base_gross_year_to_date");
-                                frm.refresh_field("year_to_date");
-                                frm.refresh_field("base_year_to_date");
-                                frm.refresh_field("month_to_date");
-                                frm.refresh_field("base_month_to_date");
-                                frm.save();
-
-                            } else {
-                                console.error("No earnings found in salary slip.");
-                            }
-                        } else {
-                            console.error("Failed to get site percentage.");
-                        }
-                    });
-                } else {
-                    console.error("No records found.");
-                }
-            },
-            error: function (err) {
-                console.error("Error fetching attendance:", err);
-            }
-        });
+        process_salary_calculation(frm);
     },
 
     after_submit: function (frm) {
-        frappe.call({
-            method: "salary_site_calc.overrides.salary_slip.salary_slip.fetch_attendance",
-            args: {
-                employee: frm.doc.employee,
-                start_date: frm.doc.start_date,
-                end_date: frm.doc.end_date
-            },
-            callback: function (response) {
-                if (response.message) {
-                    const attendanceRecordsLength = response.message.length;
-                    fetch_last_salary_structure(frm.doc.employee, async function (sitePercentage) {
-                        if (sitePercentage !== null) {
-                            const earnings = frm.doc.earnings;
-
-                            if (earnings && earnings.length > 0) {
-                                const earning = earnings[0];
-                                const salaryPerDay = earning.amount / frm.doc.payment_days;
-                                const newAmount = earning.amount + (attendanceRecordsLength * (sitePercentage * salaryPerDay / 100));
-
-                                const paymentOfficeDays = frm.doc.payment_days - attendanceRecordsLength;
-                                const paymentSiteDays = attendanceRecordsLength;
-
-                                earning.amount = newAmount;
-
-                                frm.doc.base_gross_pay = newAmount;
-                                frm.doc.gross_pay = newAmount;
-                                frm.doc.net_pay = newAmount;
-                                frm.doc.base_net_pay = newAmount;
-                                frm.doc.rounded_total = Math.round(newAmount);
-                                frm.doc.base_rounded_total = Math.round(newAmount);
-                                const amountInWords = await getMoneyInWords(newAmount);
-                                frm.doc.total_in_words = amountInWords;
-                                frm.doc.base_total_in_words = amountInWords;
-
-                                frm.doc.custom_total_office = paymentOfficeDays * salaryPerDay;
-                                frm.doc.custom_total_site = paymentSiteDays * salaryPerDay + (paymentSiteDays * (sitePercentage * salaryPerDay / 100));
-
-                                frappe.model.set_value(earning.doctype, earning.name, "amount", newAmount);
-
-                                frm.doc.custom_days_on_site = paymentSiteDays;
-                                frm.doc.custom_days_on_office = paymentOfficeDays;
-
-                                frm.doc.gross_year_to_date = newAmount;
-                                frm.doc.base_gross_year_to_date = newAmount;
-                                frm.doc.year_to_date = newAmount;
-                                frm.doc.base_year_to_date = newAmount;
-                                frm.doc.month_to_date = newAmount;
-                                frm.doc.base_month_to_date = newAmount;
-
-                                frm.refresh_field("earnings");
-                                frm.refresh_field("base_gross_pay");
-                                frm.refresh_field("gross_pay");
-                                frm.refresh_field("net_pay");
-                                frm.refresh_field("base_net_pay");
-                                frm.refresh_field("rounded_total");
-                                frm.refresh_field("base_rounded_total");
-                                frm.refresh_field("total_in_words");
-                                frm.refresh_field("base_total_in_words");
-                                frm.refresh_field("custom_total_office");
-                                frm.refresh_field("custom_total_site");
-                                frm.refresh_field("custom_days_on_site");
-                                frm.refresh_field("custom_days_on_office");
-                                frm.refresh_field("gross_year_to_date");
-                                frm.refresh_field("base_gross_year_to_date");
-                                frm.refresh_field("year_to_date");
-                                frm.refresh_field("base_year_to_date");
-                                frm.refresh_field("month_to_date");
-                                frm.refresh_field("base_month_to_date");
-                                frm.save();
-                            } else {
-                                console.error("No earnings found in salary slip.");
-                            }
-                        } else {
-                            console.error("Failed to get site percentage.");
-                        }
-                    });
-                } else {
-                    console.error("No records found.");
-                }
-            },
-            error: function (err) {
-                console.error("Error fetching attendance:", err);
-            }
-        });
+        process_salary_calculation(frm);
     }
 });
+
+function process_salary_calculation(frm) {
+    frappe.call({
+        method: "salary_site_calc.overrides.salary_slip.salary_slip.fetch_attendance",
+        args: {
+            employee: frm.doc.employee,
+            start_date: frm.doc.start_date,
+            end_date: frm.doc.end_date
+        },
+        callback: function (response) {
+            if (response.message) {
+                const attendanceRecordsLength = response.message.length;
+                fetch_last_salary_structure(frm.doc.employee, async function (sitePercentage) {
+                    if (sitePercentage !== null) {
+                        await calculate_salary(frm, attendanceRecordsLength, sitePercentage);
+                    } else {
+                        console.error("Failed to get site percentage.");
+                    }
+                });
+            } else {
+                console.error("No attendance records found.");
+            }
+        },
+        error: function (err) {
+            console.error("Error fetching attendance:", err);
+        }
+    });
+}
+
+
+async function calculate_salary(frm, attendanceRecordsLength, sitePercentage) {
+    const earnings = frm.doc.earnings;
+    const deductions = frm.doc.deductions || [];
+
+    if (!earnings || earnings.length === 0) {
+        console.error("No earnings found in salary slip.");
+        return;
+    }
+
+    const basicEarning = earnings.find(e => e.salary_component === 'Basic');
+    if (!basicEarning) {
+        console.error("No Basic Salary component found.");
+        return;
+    }
+
+    const salaryPerDay = basicEarning.amount / frm.doc.payment_days;
+    const siteBonus = attendanceRecordsLength * (sitePercentage * salaryPerDay / 100);
+    const newBasicAmount = basicEarning.amount + siteBonus;
+
+    basicEarning.amount = newBasicAmount;
+
+    const totalEarnings = earnings.reduce((total, e) => total + e.amount, 0);
+    const totalDeductions = deductions.reduce((total, d) => total + d.amount, 0);
+    const netPay = totalEarnings - totalDeductions;
+
+    frm.doc.base_gross_pay = totalEarnings;
+    frm.doc.gross_pay = totalEarnings;
+    frm.doc.net_pay = netPay;
+    frm.doc.base_net_pay = netPay;
+    frm.doc.rounded_total = Math.round(netPay);
+    frm.doc.base_rounded_total = Math.round(netPay);
+
+    const amountInWords = await getMoneyInWords(netPay);
+    frm.doc.total_in_words = amountInWords;
+    frm.doc.base_total_in_words = amountInWords;
+
+    const paymentOfficeDays = frm.doc.payment_days - attendanceRecordsLength;
+    const paymentSiteDays = attendanceRecordsLength;
+
+    frm.doc.custom_total_office = paymentOfficeDays * salaryPerDay;
+    frm.doc.custom_total_site = paymentSiteDays * salaryPerDay + siteBonus;
+    frm.doc.custom_days_on_site = paymentSiteDays;
+    frm.doc.custom_days_on_office = paymentOfficeDays;
+
+    frm.doc.gross_year_to_date = totalEarnings;
+    frm.doc.base_gross_year_to_date = totalEarnings;
+    frm.doc.year_to_date = totalEarnings;
+    frm.doc.base_year_to_date = totalEarnings;
+    frm.doc.month_to_date = totalEarnings;
+    frm.doc.base_month_to_date = totalEarnings;
+
+    frappe.model.set_value(basicEarning.doctype, basicEarning.name, "amount", newBasicAmount);
+
+    frm.refresh_fields();
+    frm.save();
+}
+
 
 function fetch_last_salary_structure(employee, callback) {
     frappe.call({
