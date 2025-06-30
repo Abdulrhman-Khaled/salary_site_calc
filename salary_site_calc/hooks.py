@@ -31,6 +31,11 @@ doctype_js = {
     "Salary Slip" : "overrides/salary_slip/salary_slip.js",
 }
 
+override_report = {
+    "Salary Register": "salary_site_calc.payroll.report.salary_register.salary_register"
+}
+
+
 # doctype_js = {"doctype" : "public/js/doctype.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
