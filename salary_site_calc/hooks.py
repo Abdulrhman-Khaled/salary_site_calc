@@ -29,11 +29,9 @@ app_include_js = "assets/salary_site_calc/js/employee_attendance_tool.js"
 # include js in doctype views
 doctype_js = {
     "Salary Slip" : "overrides/salary_slip/salary_slip.js",
+    "Salary Register" : "salary_site_calc/payroll/report/salary_register/salary_register.js"
 }
 
-override_report = {
-    "Salary Register": "salary_site_calc.payroll.report.salary_register.salary_register"
-}
 
 
 # doctype_js = {"doctype" : "public/js/doctype.js"}
@@ -163,7 +161,8 @@ override_report = {
 # ------------------------------
 #
 override_whitelisted_methods = {
-	"hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance":"salary_site_calc.overrides.override.custom_mark_employee_attendance"
+	"hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance":"salary_site_calc.overrides.override.custom_mark_employee_attendance",
+    "hrms.payroll.report.salary_register.salary_register.execute": "salary_site_calc.payroll.report.salary_register.salary_register.execute"
 }
 #
 # each overriding function accepts a `data` argument;
