@@ -128,8 +128,12 @@ def get_columns(earning_types, ded_types):
         {"label": _("Start Date"), "fieldname": "start_date", "fieldtype": "Date", "width": 90},
         {"label": _("End Date"), "fieldname": "end_date", "fieldtype": "Date", "width": 90},
         {"label": _("Leave Without Pay"), "fieldname": "leave_without_pay", "fieldtype": "Float", "width": 50},
-        {"label": _("Payment Days"), "fieldname": "payment_days", "fieldtype": "Float", "width": 100},
-    ]
+        {"label": _("Payment Days"), "fieldname": "payment_days", "fieldtype": "Int", "width": 100},
+		{"label": _("Days on Office"), "fieldname": "custom_days_on_office", "fieldtype": "Int", "width": 100},
+        {"label": _("Days on Site"), "fieldname": "custom_days_on_site", "fieldtype": "Int", "width": 100},
+        {"label": _("Total Office Amount"), "fieldname": "custom_total_office", "fieldtype": "Currency", "options": "currency", "width": 130},
+		{"label": _("Total Site Amount"), "fieldname": "custom_total_site", "fieldtype": "Currency", "options": "currency", "width": 130},
+	]
 
     for earning in earning_types:
         columns.append({
@@ -150,7 +154,7 @@ def get_columns(earning_types, ded_types):
 
     for deduction in ded_types:
         columns.append({
-            "label": deduction,
+            "label": "Deduction",
             "fieldname": frappe.scrub(deduction),
             "fieldtype": "Currency",
             "options": "currency",
@@ -161,10 +165,6 @@ def get_columns(earning_types, ded_types):
         {"label": _("Loan Repayment"), "fieldname": "total_loan_repayment", "fieldtype": "Currency", "options": "currency", "width": 120},
         {"label": _("Total Deduction"), "fieldname": "total_deduction", "fieldtype": "Currency", "options": "currency", "width": 120},
         {"label": _("Net Pay"), "fieldname": "net_pay", "fieldtype": "Currency", "options": "currency", "width": 120},
-        {"label": _("Days on Site"), "fieldname": "custom_days_on_site", "fieldtype": "Float", "width": 100},
-        {"label": _("Days on Office"), "fieldname": "custom_days_on_office", "fieldtype": "Float", "width": 100},
-        {"label": _("Total Site Amount"), "fieldname": "custom_total_site", "fieldtype": "Currency", "options": "currency", "width": 130},
-        {"label": _("Total Office Amount"), "fieldname": "custom_total_office", "fieldtype": "Currency", "options": "currency", "width": 130},
         {"label": _("Currency"), "fieldtype": "Data", "fieldname": "currency", "options": "Currency", "hidden": 1},
     ])
 
