@@ -94,20 +94,6 @@ def execute(filters=None):
 		for d in ded_types:
 			row[frappe.scrub(d)] = next((flt(x.amount) for x in deductions if x.get("salary_component") == d), 0)
 
-
-		if currency == company_currency:
-			row.update({
-				"gross_pay": flt(ss.gross_pay) * flt(ss.exchange_rate),
-				"total_deduction": flt(ss.total_deduction) * flt(ss.exchange_rate),
-				"net_pay": flt(ss.net_pay) * flt(ss.exchange_rate),
-			})
-		else:
-			row.update({
-				"gross_pay": ss.gross_pay,
-				"total_deduction": ss.total_deduction,
-				"net_pay": ss.net_pay
-			})
-
 		data.append(row)
 
 	return columns, data
