@@ -2,6 +2,9 @@ import frappe
 from frappe import _
 from frappe.utils import flt
 import erpnext
+from salary_site_calc.overrides.salary_slip.salary_slip import (
+    fetch_attendance, get_last_salary_structure
+)
 
 salary_slip = frappe.qb.DocType("Salary Slip")
 salary_detail = frappe.qb.DocType("Salary Detail")
@@ -27,6 +30,40 @@ def execute(filters=None):
 
 	data = []
 	for ss in salary_slips:
+		site_days = len(fetch_attendance(ss.employee, ss.start_date, ss.end_date))
+		office_days = flt(ss.payment_days) - site_days
+
+		structure = get_last_salary_structure(ss.employee) or {}
+		site_percentage = flt(structure.get("custom_site_percentage", 0))
+
+		basic_amount = frappe.db.get_value(
+			"Salary Detail",
+			{"parent": ss.name, "salary_component": "Basic", "parentfield": "earnings"},
+			"amount"
+		) or 0
+
+		salary_per_day = basic_amount / ss.payment_days if ss.payment_days else 0
+		site_bonus = site_days * (site_percentage * salary_per_day / 100)
+		new_basic = basic_amount + site_bonus
+
+		# Get all earnings and deductions
+		earnings = frappe.get_all("Salary Detail", filters={
+			"parent": ss.name, "parentfield": "earnings"
+		}, fields=["salary_component", "amount"])
+
+		deductions = frappe.get_all("Salary Detail", filters={
+			"parent": ss.name, "parentfield": "deductions"
+		}, fields=["amount"])
+
+		# Replace Basic amount
+		for e in earnings:
+			if e.salary_component == "Basic":
+				e.amount = new_basic
+
+		total_earnings = sum(flt(e.amount) for e in earnings)
+		total_deductions = sum(flt(d.amount) for d in deductions)
+		net_pay = total_earnings - total_deductions
+
 		row = {
 			"salary_slip_id": ss.name,
 			"employee": ss.employee,
@@ -40,19 +77,23 @@ def execute(filters=None):
 			"end_date": ss.end_date,
 			"leave_without_pay": ss.leave_without_pay,
 			"payment_days": ss.payment_days,
-			"custom_days_on_site": ss.custom_days_on_site,
-			"custom_days_on_office": ss.custom_days_on_office,
-			"custom_total_site": ss.custom_total_site,
-			"custom_total_office": ss.custom_total_office,
+			"custom_days_on_site": site_days,
+			"custom_days_on_office": office_days,
+			"custom_total_site": site_days * salary_per_day + site_bonus,
+			"custom_total_office": office_days * salary_per_day,
 			"currency": currency or company_currency,
 			"total_loan_repayment": ss.total_loan_repayment,
+			"gross_pay": total_earnings,
+			"total_deduction": total_deductions,
+			"net_pay": net_pay
 		}
 
 		for e in earning_types:
-			row.update({frappe.scrub(e): ss_earning_map.get(ss.name, {}).get(e)})
+			row[frappe.scrub(e)] = next((flt(x.amount) for x in earnings if x.salary_component == e), 0)
 
 		for d in ded_types:
-			row.update({frappe.scrub(d): ss_ded_map.get(ss.name, {}).get(d)})
+			row[frappe.scrub(d)] = next((flt(x.amount) for x in deductions if x.get("salary_component") == d), 0)
+
 
 		if currency == company_currency:
 			row.update({
@@ -86,9 +127,9 @@ def get_columns(earning_types, ded_types):
 		{"label": _("Employee"), "fieldname": "employee", "fieldtype": "Link", "options": "Employee", "width": 120},
 		{"label": _("Employee Name"), "fieldname": "employee_name", "fieldtype": "Data", "width": 140},
 		{"label": _("Date of Joining"), "fieldname": "data_of_joining", "fieldtype": "Date", "width": 100},
-		{"label": _("Branch"), "fieldname": "branch", "fieldtype": "Link", "options": "Branch", "width": 120},
-		{"label": _("Department"), "fieldname": "department", "fieldtype": "Link", "options": "Department", "width": 120},
-		{"label": _("Designation"), "fieldname": "designation", "fieldtype": "Link", "options": "Designation", "width": 120},
+		# {"label": _("Branch"), "fieldname": "branch", "fieldtype": "Link", "options": "Branch", "width": 120},
+		# {"label": _("Department"), "fieldname": "department", "fieldtype": "Link", "options": "Department", "width": 120},
+		# {"label": _("Designation"), "fieldname": "designation", "fieldtype": "Link", "options": "Designation", "width": 120},
 		{"label": _("Company"), "fieldname": "company", "fieldtype": "Link", "options": "Company", "width": 120},
 		{"label": _("Start Date"), "fieldname": "start_date", "fieldtype": "Date", "width": 100},
 		{"label": _("End Date"), "fieldname": "end_date", "fieldtype": "Date", "width": 100},

@@ -2,6 +2,7 @@ import frappe
 from frappe.utils import getdate
 from frappe.utils import money_in_words
 
+
 @frappe.whitelist()
 def fetch_attendance(employee, start_date, end_date):
     return get_attendance(employee, start_date, end_date)
