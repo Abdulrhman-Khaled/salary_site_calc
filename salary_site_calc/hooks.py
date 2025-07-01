@@ -31,6 +31,7 @@ doctype_js = {
     "Salary Slip" : "overrides/salary_slip/salary_slip.js"
 }
 
+fixtures = ["Custom Field", "Report"]
 
 
 # doctype_js = {"doctype" : "public/js/doctype.js"}
