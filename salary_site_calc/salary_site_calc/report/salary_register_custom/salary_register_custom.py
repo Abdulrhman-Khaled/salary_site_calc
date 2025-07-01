@@ -92,7 +92,7 @@ def execute(filters=None):
 			row[frappe.scrub(e)] = next((flt(x.amount) for x in earnings if x.salary_component == e), 0)
 
 		for d in ded_types:
-			row[frappe.scrub(d)] = next((flt(x.amount) for x in deductions if x.get("salary_component") == d), 0)
+			row[frappe.scrub(d)] = next((flt(x.amount) for x in deductions if x.salary_component == d), 0)
 
 		data.append(row)
 
@@ -146,7 +146,7 @@ def get_columns(earning_types, ded_types):
 
 	for deduction in ded_types:
 		columns.append({
-			"label": deduction,
+			"label": "Deduction",
 			"fieldname": frappe.scrub(deduction),
 			"fieldtype": "Currency",
 			"options": "currency",
